@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+	<title>ESP-ShareDisk</title>
+	<style>
+		div {
+			border: greenyellow solid 0px;
+			/* debug construction lines */
+			color: white;
+			text-align: center;
+		}
+
+		fieldset {
+			background: #4f4f4f;
+		}
+
+		body {
+			text-align: center;
+			font-family: verdana, sans-serif;
+			font-size: large;
+			background: #252525;
+		}
+
+		td {
+			padding: 0px;
+		}
+
+		a {
+			color: #1fa3ec;
+			text-decoration: none;
+		}
+
+		.commandform {
+			margin-bottom: 10px;
+		}
+
+		.button {
+			border: 0;
+			border-radius: 0.3rem;
+			color: #faffff;
+			line-height: 2.4rem;
+			font-size: 1.2rem;
+			width: 100%;
+			-webkit-transition-duration: 0.4s;
+			transition-duration: 0.4s;
+			cursor: pointer;
+		}
+
+		.b-blue {
+			background: #1fa3ec;
+		}
+
+		.b-blue:hover {
+			background: #0e70a4;
+		}
+
+		.b-red {
+			background: #d43535;
+		}
+
+		.b-red:hover {
+			background: #931f1f;
+		}
+
+
+		#content {
+			text-align: left;
+			display: inline-block;
+			color: #eaeaea;
+			min-width: 340px;
+		}
+
+
+		#sdcardnotavailablebox {
+			padding: 20px;
+			background-color: #E09900;
+			text-align: center;
+		}
+
+		#sdcardfilesbox {
+			text-align: center;
+
+		}
+
+		#filestable {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		#filestable td,
+		#filestable th {
+			border: 1px solid gray;
+		}
+	</style>
+
+	<script lang="js">
+		function _(el) {
+			return document.getElementById(el);
+		}
+
+		function uploadFile() {
+			var file = _("upload_file_input").files[0];
+			_("upload_progress_bar").value = 0;
+			var formData = new FormData();
+			formData.append("file", file);
+			var xmlHttpRequest = new XMLHttpRequest();
+			// bug note: only when throttling is enabled, the progress handler
+			// seems to update correctly. Otherwise it is fired only once and jumps to 
+			// 100% which makes totally no sense. I did not find any way to solve this...
+			// https://stackoverflow.com/questions/3352555/xhr-upload-progress-is-100-from-the-start
+			xmlHttpRequest.upload.onprogress = progressHandler;
+			xmlHttpRequest.upload.onload = completeHandler;
+			xmlHttpRequest.upload.onerror = errorHandler;
+			xmlHttpRequest.upload.onabort = abortHandler;
+			xmlHttpRequest.open("POST", "upload");
+			xmlHttpRequest.send(formData);
+		}
+
+		function progressHandler(event) {
+			if (!event.lengthComputable) return;
+			var percent = (event.loaded / event.total) * 100;
+			_("upload_progress_bar").value = Math.round(percent);
+			_("upload_status").innerHTML = Math.round(percent) + "% (" + event.loaded + "b of " + event.total + "b)";
+		}
+
+		function completeHandler(event) {
+			_("upload_status").innerHTML = "100%, Reloading page...";
+			window.location.href = "/";
+		}
+
+		function errorHandler(event) {
+			_("upload_status").innerHTML = "Upload failed";
+		}
+
+		function abortHandler(event) {
+			_("upload_status").innerHTML = "Upload aborted";
+		}
+
+	</script>
+</head>
+
+<body>
+	<div id="content">
+		<div>
+			<h1>ESP-ShareDisk</h1>
+		</div>
+		<div>
+			<h3>SD Card:</h3>
+		</div>
+		<div id="sdcardnotavailablebox" style="<% sdCardNotAvailableBoxStyles %>">
+			SD card not available. Claim it first.
+		</div>
+		<div style="<% sdFilesStyles %>">
+			<table id="filestable">
+				<tr>
+					<th>Name</th>
+					<th>Size (kB)</th>
+					<th>Action</th>
+				</tr>
+				<% files %>
+			</table>
+			<fieldset>
+				<legend>
+					Upload/Overwrite File
+				</legend>
+				<form enctype="multipart/form-data" method="post">
+					<input type="file" name="file" id="upload_file_input" onchange="uploadFile()"><br>
+					<progress id="upload_progress_bar" value="0" max="100" style="width:300px;"></progress>
+					<div id="upload_status"></div>
+				</form>
+			</fieldset>
+		</div>
+		<div>
+			<h3>Commands:</h3>
+		</div>
+		<div>
+			<form action="claimsd" method="get" class="commandform"><button class="button b-blue">Claim SD card</button>
+			</form>
+			<form action="reboot" method="get" class="commandform"><button class="button b-red">Reboot</button></form>
+		</div>
+	</div>
+</body>
+
+</html>
