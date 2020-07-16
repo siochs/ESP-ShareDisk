@@ -11,7 +11,7 @@ Also, relying on a serial connection for printing just feels like stepping on th
 ## Klipper
 Klipper offloads the conversion from gcode to motor movements to an external computer like the Raspberry Pi. This is smart and it has reported to improve print speeds and quality. Nevertheless, the whole technology relies on a stable serial connection in which I don't have much trust since i saw the errors in the kernel logs.
 
-## Toshiba's FlashAir
+## Toshiba FlashAir
 This was the first product that I thought will fulfill my needs. Unfortunately this WiFi-SD-card is discontinuoued. The FlashAirs left are extremely expensive - of course. There are similar products out there but the embedded webservers don't seem to provide upload capabilities. Only download from SD to your end device. Also, according to [this issue](https://github.com/Creality3DPrinting/Ender-3/issues/12), the supply voltage for the SD card is hooked to the Ender's serial chip reference voltage output which may not provide enough current for all (and especially WiFi capable) SD cards.
 
 # What you need
