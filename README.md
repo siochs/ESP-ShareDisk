@@ -68,10 +68,10 @@ Be patient! This is an ESP32 board housing a webserver. This is not the fastest 
 ![ESP-ShareDisk landing page](documentation/landing-page.jpg)
 
 4) Hit "Claim SD card"
-5) Upload or Access your file over the webinterface
+5) Upload/Access* your file over the webinterface
 6) Hit "Reboot" when you are done
 7) Turn on printer and start printing.
 
-You can upload files, download and delete files and mark them for "Autoprint". On autoprint, the content of the file will be copied to `auto0.g` (give it some time, 4MB takes approximately 2 minutes) which the printer will automatically execute on startup. If you wish to print that file only once, click "Autoprint once". The `auto0.g` file deletes itself when the job is done.
+*You can upload files, download and delete files and mark them for "Autoprint". On autoprint, the content of the file will be copied to `auto0.g` (give it some time, 4MB takes approximately 2 minutes) which the printer will automatically execute on startup. If you wish to print that file only once, click "Autoprint once". The `auto0.g` file deletes itself when the job is done.
 
 ![ESP-ShareDisk landing page](documentation/sd-claimed.jpg)
